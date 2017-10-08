@@ -8,7 +8,7 @@ use std::os::unix::fs::OpenOptionsExt;
 use std::os::unix::io::AsRawFd;
 use std::ptr::{ self, read_volatile, write_volatile };
 
-const GPIO_ADDR : libc::off_t      = 0x3F200000; // BCM2836 GPIO address
+const GPIO_ADDR : libc::off_t      = 0x3F200000; // BCM2836 and BCM2837 GPIO address
 const MEM_BLK_SIZE : libc::size_t  = 0xB0;       // GPIO register total size
 
 const GPFSEL2_OFFSET_ADDR : isize  = 0x02;       // 0x08 / 4
