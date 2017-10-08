@@ -9,7 +9,7 @@ use std::os::unix::io::AsRawFd;
 use std::ptr::{ self, read_volatile, write_volatile };
 
 const GPIO_ADDR : libc::off_t      = 0x3F200000; // BCM2836 and BCM2837 GPIO address
-const MEM_BLK_SIZE : libc::size_t  = 0xB0;       // GPIO register total size
+const MEM_BLK_SIZE : libc::size_t  = 4096;       // page size(4KB)
 
 const GPFSEL2_OFFSET_ADDR : isize  = 0x02;       // 0x08 / 4
 const GPSET0_OFFSET_ADDR : isize   = 0x07;       // 0x1C / 4
