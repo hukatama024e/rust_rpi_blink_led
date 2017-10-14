@@ -31,11 +31,10 @@ const ON : u32              = 1;
 const SLEEP_DELAY : u64     = 1;
 
 fn main() {
-    let mut blink_cnt : i32 = 0;
-    
+    let mut blink_cnt : i32 = 0;    
     let gpio_ptr : *mut u32 = map_gpio().expect( "failed to gpio mapping" );
-    let fsel2_reg : *mut u32 = gpio_ptr.wrapping_offset( GPFSEL2_OFFSET_ADDR );
-    let clr0_reg : *mut u32 = gpio_ptr.wrapping_offset( GPCLR0_OFFSET_ADDR );
+    let fsel2_reg : *mut u32 = unsafe { gpio_ptr.offset( GPFSEL2_OFFSET_ADDR ) };
+    let clr0_reg : *mut u32 = unsafe { gpio_ptr.offset( GPCLR0_OFFSET_ADDR ) };
 
     unsafe {
         write_volatile( fsel2_reg, ( *fsel2_reg & FSEL27_MASK ) | ( GPFSEL_OUTPUT << FSEL27_BIT ) );
@@ -70,7 +69,7 @@ fn map_gpio() -> io::Result<*mut u32>  {
                                    GPIO_ADDR );
 
         if gpio_ptr == libc::MAP_FAILED {
-             Err( io::Error::last_os_error() )
+            Err( io::Error::last_os_error() )
         }
         else
         {
@@ -80,13 +79,13 @@ fn map_gpio() -> io::Result<*mut u32>  {
 }
 
 fn blink_led( gpio_ptr : *mut u32 ) {
-    let set0_reg : *mut u32 = gpio_ptr.wrapping_offset( GPSET0_OFFSET_ADDR );
-    let clr0_reg : *mut u32 = gpio_ptr.wrapping_offset( GPCLR0_OFFSET_ADDR );
-    let lev0_reg : *mut u32 = gpio_ptr.wrapping_offset( GPLEV0_OFFSET_ADDR );
+    let set0_reg : *mut u32 = unsafe { gpio_ptr.offset( GPSET0_OFFSET_ADDR ) };
+    let clr0_reg : *mut u32 = unsafe { gpio_ptr.offset( GPCLR0_OFFSET_ADDR ) };
+    let lev0_reg : *mut u32 = unsafe { gpio_ptr.offset( GPLEV0_OFFSET_ADDR ) };
     let level : u32;
  
     unsafe {
-       level = ( read_volatile( lev0_reg ) >> LEV27_BIT ) & 0x00000001;
+        level = ( read_volatile( lev0_reg ) >> LEV27_BIT ) & 0x00000001;
     }
     
     if level == GPLEV_HIGH {
