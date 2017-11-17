@@ -23,7 +23,7 @@ const LEV27_BIT : isize     = 27;
 
 const GPFSEL_INPUT : u32    = 0;
 const GPFSEL_OUTPUT : u32   = 1;
-const FSEL27_MASK : u32     = 0xFF1FFFFF;
+const FSEL_MASK_BASE : u32  = 0x00000007;
 
 const GPLEV_HIGH : u32      = 1;
 const ON : u32              = 1;
@@ -37,7 +37,8 @@ fn main() {
     let clr0_reg : *mut u32 = unsafe { gpio_ptr.offset( GPCLR0_OFFSET_ADDR ) };
 
     unsafe {
-        write_volatile( fsel2_reg, ( *fsel2_reg & FSEL27_MASK ) | ( GPFSEL_OUTPUT << FSEL27_BIT ) );
+        write_volatile( fsel2_reg, ( *fsel2_reg & ( FSEL_MASK_BASE << FSEL27_BIT ) ) |
+                                     ( GPFSEL_OUTPUT << FSEL27_BIT ) );
     }
     
     while blink_cnt < 10 {
@@ -48,7 +49,8 @@ fn main() {
     
     unsafe {
         write_volatile( clr0_reg, *clr0_reg | ( ( ON << CLR27_BIT ) ) );
-        write_volatile( fsel2_reg, ( *fsel2_reg & FSEL27_MASK ) | ( GPFSEL_INPUT << FSEL27_BIT ) );
+        write_volatile( fsel2_reg, ( *fsel2_reg & ( FSEL_MASK_BASE << FSEL27_BIT ) ) | 
+                        ( GPFSEL_INPUT << FSEL27_BIT ) );
     }
 }
 
